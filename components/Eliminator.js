@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import Papa from "papaparse";
 import { Button } from "./ui/button";
@@ -35,6 +34,7 @@ const Eliminator = () => {
     const rnd = Math.floor(Math.random() * 1e15).toString().padStart(15, '0');
     return `ID-${rnd}`;
   };
+
   const [wallets, setWallets] = useState([]);
   const [remaining, setRemaining] = useState([]);
   const [eliminated, setEliminated] = useState([]);
@@ -67,15 +67,7 @@ const Eliminator = () => {
     if (wave === 5) {
       const finalWinner = manualWinner || remaining[0];
       const eliminatedThisWave = remaining.filter((w) => w !== finalWinner);
-      const messages = [];
-      let counter = logCounter;
-      for (const v of eliminatedThisWave) {
-        const log = getRandomEvent(v, [finalWinner]);
-        const tag = `${gameId}-${counter}]`;
-        messages.push(`${gameId}-${counter}] ${log}`);
-        counter++;
-      }
-      setLogCounter(counter);
+      const messages = eliminatedThisWave.map(v => getRandomEvent(v, [finalWinner]));
       setKillLog((prev) => [...prev, messages]);
       setRemaining([finalWinner]);
       setEliminated([...eliminated, ...eliminatedThisWave]);
@@ -95,15 +87,7 @@ const Eliminator = () => {
     }
 
     const eliminatedThisWave = Array.from(toEliminate);
-    const messages = [];
-      let counter = logCounter;
-      for (const v of eliminatedThisWave) {
-        const log = getRandomEvent(v, remaining);
-        const tag = `${gameId}-${counter}]`;
-        messages.push(`${gameId}-${counter}] ${log}`);
-        counter++;
-      }
-      setLogCounter(counter);
+    const messages = eliminatedThisWave.map(v => getRandomEvent(v, remaining));
     const newEliminated = [...eliminated, ...eliminatedThisWave];
     const newRemaining = remaining.filter((w) => !toEliminate.has(w));
     setKillLog((prev) => [...prev, messages]);
@@ -154,22 +138,17 @@ const Eliminator = () => {
       )}
 
       {killLog.length > 0 && (
-        <div className="w-full max-w-3xl mt-10 text-sm text-gray-700 space-y-4">
+        <div className="w-full max-w-3xl mt-10 text-sm text-gray-700 space-y-6">
           {killLog.map((log, i) => (
-            <div key={i}>
-              <h2 className="font-bold mb-1">Wave {i + 1} Kill Log</h2>
-              <ul className="list-disc list-inside space-y-1">
+            <div key={i} className="mb-6">
+              <h2 className="font-bold mb-2 text-black">Wave {i + 1} Kill Log</h2>
+              <div className="space-y-2">
                 {log.map((line, j) => (
-                  <li key={j}>
-      <span className="bg-red-600 text-white px-1 select-text">
-        {line.split(']')[0] + ']'}
-      </span>
-      <span className="bg-green-400 text-black px-1 select-text">
-        {line.split(']').slice(1).join(']')}
-      </span>
-    </li>
+                  <div key={j} className="select-text text-sm text-black bg-green-400 px-2 py-1 rounded w-fit">
+                    {line}
+                  </div>
                 ))}
-              </ul>
+              </div>
             </div>
           ))}
         </div>
