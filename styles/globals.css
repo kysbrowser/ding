@@ -1,0 +1,13 @@
+@font-face {
+  font-family: 'BasierCircle-Medium';
+  src: url('/fonts/BasierCircle-Medium.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: 'BasierCircle-Medium', sans-serif;
+  background: #f8f8f8;
+  margin: 0;
+  padding: 0;
+}
